@@ -7,45 +7,111 @@
     android:background="@color/background"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
-    android:paddingTop="12dp"
+    android:paddingTop="14dp"
     android:paddingBottom="16dp">
 
-    <TextView
-        android:id="@+id/titleText"
+    <!-- Brand row: the linked-ring mark + duotone wordmark -->
+    <LinearLayout
+        android:id="@+id/brandRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/title"
-        android:textColor="@color/text_primary"
-        android:textSize="20sp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_brand_mark"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/brand_name_loop"
+            android:textColor="@color/text_primary"
+            android:textSize="19sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/brand_name_wave"
+            android:textColor="@color/accent"
+            android:textSize="19sp" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/settings_title"
+        android:padding="6dp"
+        android:src="@drawable/ic_settings"
+        app:layout_constraintBottom_toBottomOf="@id/brandRow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/brandRow" />
 
     <TextView
         android:id="@+id/subtitleText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="3dp"
         android:text="@string/subtitle"
         android:textColor="@color/text_secondary"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText" />
+        app:layout_constraintTop_toBottomOf="@id/brandRow" />
 
-    <!-- Video preview surface -->
+    <!-- Rec row: signals that the preview below is live/looping -->
+    <LinearLayout
+        android:id="@+id/recRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitleText">
+
+        <View
+            android:id="@+id/recDot"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/rec_dot" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.08"
+            android:text="@string/preview_label"
+            android:textAllCaps="true"
+            android:textColor="@color/text_secondary"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+    <!-- Video preview surface, framed by the corner-bracket signature -->
     <androidx.cardview.widget.CardView
         android:id="@+id/previewCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         app:cardBackgroundColor="@color/surface"
         app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/subtitleText"
-        app:layout_constraintBottom_toTopOf="@id/pickButton"
+        app:layout_constraintTop_toBottomOf="@id/recRow"
+        app:layout_constraintBottom_toTopOf="@id/galleryLabel"
         app:layout_constraintHeight_min="100dp" />
 
     <FrameLayout
@@ -73,12 +139,166 @@
 
     </FrameLayout>
 
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="8dp"
+        android:rotation="0"
+        android:src="@drawable/ic_corner_bracket"
+        android:contentDescription="@null"
+        app:layout_constraintTop_toTopOf="@id/previewCard"
+        app:layout_constraintStart_toStartOf="@id/previewCard" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="8dp"
+        android:rotation="90"
+        android:src="@drawable/ic_corner_bracket"
+        android:contentDescription="@null"
+        app:layout_constraintTop_toTopOf="@id/previewCard"
+        app:layout_constraintEnd_toEndOf="@id/previewCard" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="8dp"
+        android:rotation="270"
+        android:src="@drawable/ic_corner_bracket"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="@id/previewCard"
+        app:layout_constraintStart_toStartOf="@id/previewCard" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="8dp"
+        android:rotation="180"
+        android:src="@drawable/ic_corner_bracket"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="@id/previewCard"
+        app:layout_constraintEnd_toEndOf="@id/previewCard" />
+
+    <TextView
+        android:id="@+id/galleryLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.06"
+        android:text="@string/gallery_label"
+        android:textAllCaps="true"
+        android:textColor="@color/text_secondary"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/previewCard" />
+
+    <LinearLayout
+        android:id="@+id/galleryRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/galleryLabel">
+
+        <LinearLayout
+            android:id="@+id/galleryDriftItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:padding="4dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:background="@drawable/chip_drift" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="monospace"
+                android:text="@string/gallery_drift"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/galleryPulseItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:padding="4dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:background="@drawable/chip_pulse" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="monospace"
+                android:text="@string/gallery_pulse"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/galleryTwinItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:padding="4dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:background="@drawable/chip_twin" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="monospace"
+                android:text="@string/gallery_twin"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/pickButton"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:text="@string/pick_video"
@@ -87,113 +307,150 @@
         app:cornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/previewCard"
-        app:strokeColor="@color/accent" />
+        app:layout_constraintTop_toBottomOf="@id/galleryRow"
+        app:strokeColor="@color/text_secondary" />
 
-    <!-- Playback speed control -->
-    <TextView
-        android:id="@+id/speedLabel"
+    <!-- Deck: playback speed + scale mode, styled as instrument readouts -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/deckCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/speed_label"
-        android:textColor="@color/text_primary"
-        android:textSize="12sp"
+        app:cardBackgroundColor="@color/surface"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pickButton" />
+        app:layout_constraintTop_toBottomOf="@id/pickButton">
 
-    <TextView
-        android:id="@+id/speedValueText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/speed_default_display"
-        android:textColor="@color/text_secondary"
-        android:textSize="12sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/speedLabel"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp">
 
-    <SeekBar
-        android:id="@+id/speedSeekBar"
-        android:layout_width="0dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="0dp"
-        android:max="35"
-        android:progress="15"
-        android:progressTint="@color/accent"
-        android:thumbTint="@color/accent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/speedLabel" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <!-- Crop / scaling mode control -->
-    <TextView
-        android:id="@+id/cropLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:text="@string/crop_label"
-        android:textColor="@color/text_primary"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/speedSeekBar" />
+                <TextView
+                    android:id="@+id/speedLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:letterSpacing="0.08"
+                    android:text="@string/speed_label"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/cropToggleGroup"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cropLabel"
-        app:selectionRequired="true"
-        app:singleSelection="true">
+                <TextView
+                    android:id="@+id/speedValueText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="monospace"
+                    android:text="@string/speed_default_display"
+                    android:textColor="@color/accent"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/cropFillButton"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/crop_fill"
-            android:textColor="@color/text_primary"
-            android:textSize="11sp"
-            app:strokeColor="@color/accent" />
+            </RelativeLayout>
 
-        <Button
-            android:id="@+id/cropFitButton"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/crop_fit"
-            android:textColor="@color/text_primary"
-            android:textSize="11sp"
-            app:strokeColor="@color/accent" />
+            <SeekBar
+                android:id="@+id/speedSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_marginTop="2dp"
+                android:max="35"
+                android:progress="15"
+                android:progressTint="@color/accent"
+                android:thumbTint="@color/accent" />
 
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/divider" />
+
+            <TextView
+                android:id="@+id/cropLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:letterSpacing="0.08"
+                android:text="@string/crop_label"
+                android:textAllCaps="true"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/cropToggleGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <Button
+                    android:id="@+id/cropFillButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:fontFamily="monospace"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0.06"
+                    android:text="@string/crop_fill"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_primary"
+                    android:textSize="11sp"
+                    app:strokeColor="@color/text_secondary" />
+
+                <Button
+                    android:id="@+id/cropFitButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:fontFamily="monospace"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:letterSpacing="0.06"
+                    android:text="@string/crop_fit"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_primary"
+                    android:textSize="11sp"
+                    app:strokeColor="@color/text_secondary" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/setWallpaperButton"
         android:layout_width="0dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="12dp"
         android:backgroundTint="@color/accent"
         android:enabled="false"
+        android:fontFamily="sans-serif-medium"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:text="@string/set_wallpaper"
-        android:textColor="@color/text_primary"
+        android:textColor="@color/background"
         android:textSize="13sp"
-        app:cornerRadius="10dp"
+        app:cornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cropToggleGroup" />
+        app:layout_constraintTop_toBottomOf="@id/deckCard" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

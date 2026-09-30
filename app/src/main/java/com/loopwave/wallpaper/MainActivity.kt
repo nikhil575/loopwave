@@ -1,7 +1,9 @@
-package io.github.codeg0blin.videowallpaper
+package com.loopwave.wallpaper
 
+import android.animation.ObjectAnimator
 import android.app.WallpaperManager
 import android.content.ComponentName
+import android.content.ContentResolver
 import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
@@ -11,14 +13,15 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
-import io.github.codeg0blin.videowallpaper.R
-import io.github.codeg0blin.videowallpaper.VideoWallpaperService
-import io.github.codeg0blin.videowallpaper.databinding.ActivityMainBinding
+import com.loopwave.wallpaper.databinding.ActivityMainBinding
 
 /**
  * Lets the user pick a video, preview it, and set it as a live wallpaper
@@ -48,8 +51,15 @@ class MainActivity : AppCompatActivity() {
         prefs.edit().putFloat(VideoWallpaperService.Companion.PREF_PLAYBACK_SPEED, currentSpeed).apply()
     }
 
+    // Android's Photo Picker — opens directly into a Google Photos-style grid
+    // regardless of any OS-remembered "last used app" state, unlike
+    // ACTION_OPEN_DOCUMENT which can default to the plain Files app for a
+    // package the system has no picker history for yet. Its returned URIs
+    // support takePersistableUriPermission the same as document URIs, which
+    // matters here since the wallpaper service needs to reopen this file
+    // indefinitely, including after reboots.
     private val pickVideoLauncher =
-        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) onVideoPicked(uri)
         }
 
@@ -66,13 +76,38 @@ class MainActivity : AppCompatActivity() {
         setupSpeedControl()
         setupCropControl()
         restoreSelection()
+        startRecDotPulse()
 
         binding.pickButton.setOnClickListener {
-            pickVideoLauncher.launch(arrayOf("video/*"))
+            pickVideoLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
         }
 
         binding.setWallpaperButton.setOnClickListener {
             launchLiveWallpaperPicker()
+        }
+
+        binding.settingsButton.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+
+        binding.galleryDriftItem.setOnClickListener { onBundledClipSelected(R.raw.loop_drift) }
+        binding.galleryPulseItem.setOnClickListener { onBundledClipSelected(R.raw.loop_pulse) }
+        binding.galleryTwinItem.setOnClickListener { onBundledClipSelected(R.raw.loop_twin) }
+    }
+
+    /**
+     * The one motion signature in this screen: a slow breathing pulse on the
+     * "preview · looping" indicator dot, echoing the video looping below it.
+     * Deliberately subtle and singular — restraint matters more than a
+     * showy animation here.
+     */
+    private fun startRecDotPulse() {
+        ObjectAnimator.ofFloat(binding.recDot, View.ALPHA, 1f, 0.25f).apply {
+            duration = 1400
+            repeatMode = ObjectAnimator.REVERSE
+            repeatCount = ObjectAnimator.INFINITE
+            interpolator = LinearInterpolator()
+            start()
         }
     }
 
@@ -169,14 +204,32 @@ class MainActivity : AppCompatActivity() {
             null
         } ?: return
 
-        // Confirm we still hold permission; if not, treat as no selection.
-        val stillGranted = contentResolver.persistedUriPermissions.any {
+        // Bundled gallery clips (android.resource:// URIs) are always
+        // readable — they're baked into the APK, not a document the user
+        // granted access to — so only user-picked files need the persisted
+        // permission check.
+        val stillGranted = isBundledResourceUri(uri) || contentResolver.persistedUriPermissions.any {
             it.uri == uri && it.isReadPermission
         }
         if (stillGranted) {
             selectedVideoUri = uri
             showPreview(uri)
         }
+    }
+
+    private fun isBundledResourceUri(uri: Uri): Boolean = uri.scheme == ContentResolver.SCHEME_ANDROID_RESOURCE
+
+    /**
+     * Selects one of the built-in procedural loops (see res/raw) as an
+     * alternative to picking a personal video. Skips takePersistableUriPermission
+     * entirely — that call is only valid for document-provider URIs the user
+     * granted access to, not for the app's own bundled resources.
+     */
+    private fun onBundledClipSelected(rawResId: Int) {
+        val uri = Uri.parse("android.resource://$packageName/$rawResId")
+        selectedVideoUri = uri
+        prefs.edit().putString(VideoWallpaperService.Companion.PREF_VIDEO_URI, uri.toString()).apply()
+        showPreview(uri)
     }
 
     private fun onVideoPicked(uri: Uri) {
@@ -218,6 +271,32 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        if (!prefs.getBoolean(PREF_BATTERY_TIP_SHOWN, false)) {
+            showBatteryTipThenLaunch()
+            return
+        }
+
+        launchLiveWallpaperPickerIntent()
+    }
+
+    /**
+     * Shown exactly once, the first time anyone taps "Set as Wallpaper" —
+     * live wallpapers are a well-known battery complaint, and heading it off
+     * here costs one dialog instead of a 1-star review later.
+     */
+    private fun showBatteryTipThenLaunch() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.battery_tip_title)
+            .setMessage(R.string.battery_tip_message)
+            .setCancelable(false)
+            .setPositiveButton(R.string.battery_tip_continue) { _, _ ->
+                prefs.edit().putBoolean(PREF_BATTERY_TIP_SHOWN, true).apply()
+                launchLiveWallpaperPickerIntent()
+            }
+            .show()
+    }
+
+    private fun launchLiveWallpaperPickerIntent() {
         val intent = Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER)
         intent.putExtra(
             WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
@@ -251,5 +330,9 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         speedDebounceHandler.removeCallbacks(speedDebounceRunnable)
+    }
+
+    companion object {
+        private const val PREF_BATTERY_TIP_SHOWN = "battery_tip_shown"
     }
 }

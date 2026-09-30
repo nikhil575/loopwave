@@ -1,5 +1,6 @@
-package io.github.codeg0blin.videowallpaper
+package com.loopwave.wallpaper
 
+import android.content.ContentResolver
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.media.PlaybackParams
@@ -133,7 +134,10 @@ class VideoWallpaperService : WallpaperService() {
             // action in system settings, storage change, etc.), and without
             // this check a revoked URI fails silently deep inside setDataSource
             // with no way for the user to tell why their wallpaper went blank.
-            val stillGranted = try {
+            // Bundled gallery clips (android.resource:// URIs) are exempt —
+            // they're baked into the APK, not a document the user granted
+            // access to, so there's never a persisted-permission entry for them.
+            val stillGranted = uri.scheme == ContentResolver.SCHEME_ANDROID_RESOURCE || try {
                 applicationContext.contentResolver.persistedUriPermissions.any {
                     it.uri == uri && it.isReadPermission
                 }

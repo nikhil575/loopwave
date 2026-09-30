@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A single top-left corner bracket (⌜). Reused 4x in activity_main.xml
+     with 0/90/180/270 rotation to frame the video preview — the app's
+     signature element, since you're literally framing what becomes your
+     screen. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="20"
+    android:viewportHeight="20">
+    <path
+        android:strokeColor="@color/accent"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="square"
+        android:pathData="M2,9 L2,2 L9,2" />
+</vector>

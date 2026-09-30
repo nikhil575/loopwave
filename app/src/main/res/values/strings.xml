@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Video Live Wallpaper</string>
-    <string name="wallpaper_description">Plays your chosen video as a live wallpaper</string>
-    <string name="title">Video Live Wallpaper</string>
-    <string name="subtitle">Pick a video and set it as your wallpaper. Live wallpapers apply to both home and lock screen.</string>
+    <string name="app_name">Loopwave</string>
+    <string name="wallpaper_description">Loops your chosen video as a live wallpaper</string>
+    <string name="brand_name_loop">Loop</string>
+    <string name="brand_name_wave">wave</string>
+    <string name="preview_label">Preview · looping</string>
+    <string name="subtitle">Pick a video, loop it, and set it as your wallpaper. Applies to both home and lock screen.</string>
     <string name="pick_video">Choose Video</string>
     <string name="no_video_selected">No video selected</string>
     <string name="set_wallpaper">Set as Wallpaper</string>
@@ -11,8 +13,60 @@
     <string name="error_live_wallpaper_unavailable">Live wallpapers aren\'t supported on this device</string>
     <string name="speed_label">Playback speed</string>
     <string name="speed_default_display">1.0x</string>
-    <string name="crop_label">Crop mode</string>
-    <string name="crop_fill">Fill (crop edges)</string>
-    <string name="crop_fit">Fit (show all, may letterbox)</string>
+    <string name="crop_label">Scale mode</string>
+    <string name="crop_fill">Fill</string>
+    <string name="crop_fit">Fit</string>
+
+    <!-- Built-in loop gallery -->
+    <string name="gallery_label">Or try a built-in loop</string>
+    <string name="gallery_drift">Drift</string>
+    <string name="gallery_pulse">Pulse</string>
+    <string name="gallery_twin">Twin</string>
+
+    <!-- Battery tip, shown once before the first wallpaper is ever set -->
+    <string name="battery_tip_title">Before you set it</string>
+    <string name="battery_tip_message">Live wallpapers redraw your screen continuously, so they use more battery than a static image. Loopwave keeps this efficient, but on longer days you may want to switch back to a still wallpaper.</string>
+    <string name="battery_tip_continue">Got it, continue</string>
+
+    <!-- Settings / about / legal -->
+    <string name="settings_title">Settings</string>
+    <string name="about_section">About</string>
+    <string name="app_version_label">Version</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="licenses_title">Open Source Licenses</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="rate_app">Rate Loopwave</string>
+    <string name="feedback_email" translatable="false">nikhilpansheriya8@gmail.com</string>
+    <string name="feedback_subject">Loopwave feedback</string>
+    <string name="no_email_app">No email app found on this device</string>
+    <string name="no_play_store">Play Store isn\'t available on this device</string>
+
+    <string name="privacy_policy_content">Loopwave does not collect, store, or share any personal data.
+
+Video files you choose are read directly from your device to preview and set them as a wallpaper. They are never uploaded, copied elsewhere, or shared with any third party.
+
+Loopwave does not use the internet. It has no ads, no analytics, and no tracking of any kind.
+
+The only information kept is a reference to which video you last chose, along with your speed and scale preferences — stored locally on your device and never transmitted anywhere.
+
+If a future version of this app adds a feature that uses the internet (for example, advertising), this policy will be updated first, and the change will be reflected here and on the Play Store listing.
+
+Contact: nikhilpansheriya8@gmail.com
+Last updated: September 30, 2026</string>
+
+    <string name="licenses_content">Loopwave is built on the open-source \"Video Live Wallpaper\" project (Apache License 2.0) and is itself licensed under the Apache License 2.0.
+
+Runtime libraries (all Apache 2.0, via Google\'s Maven repository):
+• androidx.core:core-ktx
+• androidx.appcompat:appcompat
+• com.google.android.material:material
+• androidx.constraintlayout:constraintlayout
+• androidx.activity:activity-ktx
+• androidx.cardview:cardview
+• androidx.preference:preference-ktx
+
+No analytics, advertising, or tracking libraries are included.
+
+Full license text and attribution details are included in this app\'s source repository (LICENSE, NOTICE, and ATTRIBUTION.md).</string>
 
 </resources>
